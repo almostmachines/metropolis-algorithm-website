@@ -61,6 +61,13 @@ img {
     border-radius: 4px;
 }
 
+#observations-plot {
+    display: block;
+    max-width: 100%;
+    margin: 1.5rem auto;
+    border-radius: 4px;
+}
+
 blockquote {
     border-left: 3px solid var(--border);
     margin: 1.25rem 0;
