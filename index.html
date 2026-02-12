@@ -4,11 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Metropolis Algorithm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <article>
+
+        <svg class="logo" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Metropolis Algorithm">
+            <defs>
+                <filter id="cyan-glow">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+                <filter id="purple-glow">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+                <filter id="soft-glow">
+                    <feGaussianBlur stdDeviation="6" result="blur"/>
+                    <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+                <linearGradient id="line-fade-r" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.8"/>
+                    <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient id="line-fade-l" x1="1" y1="0" x2="0" y2="0">
+                    <stop offset="0%" stop-color="#a956ff" stop-opacity="0.8"/>
+                    <stop offset="100%" stop-color="#a956ff" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient id="walk-grad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.1"/>
+                    <stop offset="40%" stop-color="#22d3ee" stop-opacity="0.6"/>
+                    <stop offset="60%" stop-color="#a956ff" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="#a956ff" stop-opacity="0.1"/>
+                </linearGradient>
+            </defs>
+
+            <!-- random walk path (Metropolis chain motif) -->
+            <polyline points="80,160 120,145 160,150 200,130 240,135 280,115 320,120 360,105 400,100 440,95 480,85 520,90 560,70 600,65 640,60 680,55 720,50"
+                fill="none" stroke="url(#walk-grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+            <!-- walk dots -->
+            <g fill="#22d3ee" opacity="0.3">
+                <circle cx="80" cy="160" r="2"/>
+                <circle cx="160" cy="150" r="2"/>
+                <circle cx="240" cy="135" r="2"/>
+                <circle cx="320" cy="120" r="2"/>
+                <circle cx="400" cy="100" r="2.5"/>
+            </g>
+            <g fill="#a956ff" opacity="0.3">
+                <circle cx="480" cy="85" r="2"/>
+                <circle cx="560" cy="70" r="2"/>
+                <circle cx="640" cy="60" r="2"/>
+                <circle cx="720" cy="50" r="2"/>
+            </g>
+
+            <!-- decorative corner accents -->
+            <polyline points="30,30 30,15 45,15" fill="none" stroke="#22d3ee" stroke-width="1.5" opacity="0.6"/>
+            <polyline points="770,30 770,15 755,15" fill="none" stroke="#a956ff" stroke-width="1.5" opacity="0.6"/>
+            <polyline points="30,170 30,185 45,185" fill="none" stroke="#22d3ee" stroke-width="1.5" opacity="0.4"/>
+            <polyline points="770,170 770,185 755,185" fill="none" stroke="#a956ff" stroke-width="1.5" opacity="0.4"/>
+
+            <!-- horizontal accent lines -->
+            <line x1="50" y1="88" x2="220" y2="88" stroke="url(#line-fade-r)" stroke-width="1"/>
+            <line x1="580" y1="88" x2="750" y2="88" stroke="url(#line-fade-l)" stroke-width="1"/>
+
+            <!-- diamond accent left of title -->
+            <polygon points="55,70 65,60 75,70 65,80" fill="none" stroke="#22d3ee" stroke-width="1" opacity="0.7" filter="url(#cyan-glow)"/>
+            <!-- diamond accent right of title -->
+            <polygon points="725,70 735,60 745,70 735,80" fill="none" stroke="#a956ff" stroke-width="1" opacity="0.7" filter="url(#purple-glow)"/>
+
+            <!-- main title -->
+            <text x="400" y="72" text-anchor="middle" font-family="'Orbitron', sans-serif" font-weight="700" font-size="46" fill="#22d3ee" filter="url(#soft-glow)">METROPOLIS</text>
+
+            <!-- subtitle -->
+            <text x="400" y="112" text-anchor="middle" font-family="'Orbitron', sans-serif" font-weight="500" font-size="22" fill="#a956ff" letter-spacing="12" filter="url(#purple-glow)">ALGORITHM</text>
+
+            <!-- thin separator dots -->
+            <g fill="#22d3ee" opacity="0.4">
+                <circle cx="310" cy="130" r="1.5"/>
+                <circle cx="330" cy="130" r="1"/>
+                <circle cx="345" cy="130" r="1.5"/>
+            </g>
+            <g fill="#a956ff" opacity="0.4">
+                <circle cx="455" cy="130" r="1.5"/>
+                <circle cx="470" cy="130" r="1"/>
+                <circle cx="490" cy="130" r="1.5"/>
+            </g>
+        </svg>
 
         <h1>The Metropolis Algorithm</h1>
 
@@ -66,7 +154,7 @@
                 ctx.clearRect(0, 0, w, h);
 
                 // grid lines
-                ctx.strokeStyle = '#e5e7eb';
+                ctx.strokeStyle = '#1e293b';
                 ctx.lineWidth = 1;
                 for (let x = 0; x <= 24; x += 4) {
                     const px = Math.round(toX(x)) + 0.5;
@@ -78,7 +166,7 @@
                 }
 
                 // axes
-                ctx.strokeStyle = '#1a1a2e';
+                ctx.strokeStyle = '#cbd5e1';
                 ctx.lineWidth = 1.5;
                 ctx.beginPath();
                 ctx.moveTo(pad.left, pad.top);
@@ -87,8 +175,8 @@
                 ctx.stroke();
 
                 // tick labels
-                const sans = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
-                ctx.fillStyle = '#555';
+                const sans = "'Inter', sans-serif";
+                ctx.fillStyle = '#7c8da6';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
                 const tickFont = Math.max(10, Math.min(12, w * 0.018));
@@ -105,7 +193,7 @@
                 // axis labels
                 const labelFont = Math.max(11, Math.min(13, w * 0.02));
                 ctx.font = labelFont + 'px ' + sans;
-                ctx.fillStyle = '#1a1a2e';
+                ctx.fillStyle = '#cbd5e1';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
                 ctx.fillText('Time (hours)', pad.left + plotW / 2, pad.top + plotH + 26);
@@ -120,7 +208,7 @@
 
                 // data points
                 const r = Math.max(2.5, Math.min(4, w * 0.005));
-                ctx.fillStyle = 'rgba(37, 99, 235, 0.65)';
+                ctx.fillStyle = 'rgba(34, 211, 238, 0.7)';
                 for (const d of obs) {
                     const cx = toX(d.time_hours);
                     const cy = toY(d.oxygen_level_mg_per_l);
