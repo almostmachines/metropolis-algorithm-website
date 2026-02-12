@@ -1,12 +1,12 @@
 :root {
     --bg: #07090e;
     --bg-raised: #1e293b;
-    --text: #cbd5e1;
-    --accent: #22d3ee;
+    --text: #eef3f4;
+    --accent: #ffffff;
     --muted: #7c8da6;
     --border: #1e293b;
-    --callout-bg: rgba(34, 211, 238, 0.06);
-    --callout-border: #22d3ee;
+    --callout-bg: rgba(6, 16, 33, 1);
+    --callout: #22d3ee;
     --blockquote-bg: #1e293b;
     --max-width: 65rem;
 }
@@ -51,7 +51,7 @@ h1 {
     padding-bottom: 0.5rem;
 }
 
-h2, h3, h4, h5, h6 { color: #b373f6; }
+h2, h3, h4, h5, h6 { color: #adffea; }
 h2 { font-size: 1.5rem; }
 h3 { font-size: 1.25rem; }
 h4 { font-size: 1.125rem; }
@@ -91,7 +91,7 @@ blockquote {
 blockquote p:last-child { margin-bottom: 0; }
 
 .callout {
-    border-left: 4px solid var(--callout-border);
+    border-left: 4px solid var(--callout);
     background: var(--callout-bg);
     margin: 1.5rem 0;
     padding: 1rem 1.25rem;
@@ -103,7 +103,7 @@ blockquote p:last-child { margin-bottom: 0; }
     font-family: 'Orbitron', sans-serif;
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--accent);
+    color: var(--callout);
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.03em;
