@@ -100,7 +100,7 @@
 
         <h1>Hello world</h1>
 
-        <p class="lead">To follow this guide you only need to know what a Normal distribution is and what an integral is, by the end you will hopefully understand the Metropolis algorithm intuitively (the what, they why and the how), and learn about statistical modelling and Bayesian statistics along the way.</p>
+        <p class="lead">To follow this guide you only need to know what a <strong>Normal distribution</strong> is and what an <strong>integral</strong> is, by the end you will hopefully understand the <strong>Metropolis algorithm</strong> intuitively (the what, the why and the how), and learn about <strong>statistical modelling</strong> and <strong>Bayesian statistics</strong> along the way.</p>
 
         <h2>Introduction</h2>
 
@@ -110,9 +110,61 @@
 
         <p>And it's the wandering, the erratic path, that can solve the impossible.</p>
 
+        <h2>A glimpse</h2>
+
+        <div class="textWithImage">
+            <div class="textWithImage__text">
+                <p>To see the Metropolis algorithm in action, try this <a href="https://linear-regression.metropolis-algorithm.com" target="_blank">interactive simulator.</a></p>
+
+                <p>The yellow square is some unknown part of reality, an entity or process floating in probability space. The entity has three <em>attributes</em> and the range of possible values for each attribute is represented by an axis in the 3D space. The simulator shows us its location (the exact values of its attributes) but in a real world experiment those are unknown to us. All we have are some scattered, noisy observations.</p>
+
+                <p>The cyan circle is our starting point, representing our initial <em>hypothesis</em> about the value of each attribute.</p>
+            </div>
+
+            <picture class="textWithImage__image">
+                <img alt="Plot of 3D probability space" src="./3dplot.webp">
+            </picture>
+        </div>
+
+        <div class="textWithImage">
+            <div class="textWithImage__text">
+                <p>Press the <strong>Full Auto</strong> button in the sidebar. Watch the algorithm find the yellow square. You can rotate, pan and zoom using your mouse controls / trackpad / touch. Press <strong>Reset</strong> and then press <strong>Full Auto</strong> again. Observe that the algorithm takes a different trajectory. It&rsquo;s a homing missile that finds the target and then encloses it within its probability cloud <em>(posterior distribution)</em>.</p>
+            </div>
+
+            <picture class="textWithImage__image">
+                <img alt="Simulator control buttons" src="./buttons.png">
+            </picture>
+        </div>
+
+        <div class="textWithImage">
+            <div class="textWithImage__text">
+                <p>The <strong>Results</strong> section shows a plot. The yellow line is the actual entity we're trying to capture, it's a linear process. Around the yellow line are white dots representing individual observations of the process. The three attributes then are: the slope of the line, the y-axis intercept of the line, and the noise <em>(standard deviation)</em> of the observations.</p>
+
+                <p>The cyan dashed line is our best estimate of the yellow line based on the probability cloud <em>(posterior distribution)</em>. Click <strong>Reset</strong> and <strong>Full Auto</strong> again and watch the cyan line converge upon the yellow line as the algorithm progresses.</p>
+
+                <p>The <strong>Posterior Report</strong> underneath contains our best estimates of the attributes and our uncertainty about them <em>(95% credible intervals)</em>, as well as their true values.</p>
+            </div>
+
+            <picture class="textWithImage__image">
+                <img alt="Simulator results report" src="./results.png">
+            </picture>
+        </div>
+
+        <div class="textWithImage">
+            <div class="textWithImage__text">
+                <p>We don't want the 'contrails' to form part of our final belief, so we usually ignore the first N number of steps. Change the <strong>Burn-in</strong> setting in the sidebar to a value of 70 and press <strong>Full Auto</strong> again.</p>
+            </div>
+
+            <picture class="textWithImage__image">
+                <img alt="Simulator results report" src="./burn-in-setting.png">
+            </picture>
+        </div>
+
+        <p>To understand how the algorithm works, we&rsquo;re going to look at a more interesting problem.</p>
+
         <h2>A problem</h2>
 
-        <p>Suppose that we are monitoring the levels of dissolved oxygen (mg/L) in stream water. Samples collected at random times over a 24 hour period suggest that there was a change-point around midday:</p>
+        <p>Suppose that we are monitoring the levels of dissolved oxygen (mg/L) in stream water. Samples collected at random times over a 24 hour period suggest that there was a change-point in the early afternoon:</p>
 
         <canvas id="observations-plot" width="720" height="400"></canvas>
         <script>
@@ -230,17 +282,17 @@
             <li>what was the most likely magnitude of the change, and a credible interval</li>
         </ul>
 
-        <p>We're going to construct a Bayesian model for the data because:</p>
+        <p><strong>We're going to construct a Bayesian model for the data:</strong></p>
 
         <ul>
-            <li>a Bayesian model allows us to answer questions like "what is the probability that the change-point occurred between 4:40pm and 4:50pm?"</li>
+            <li>a Bayesian model allows us to answer questions like <em>"what is the probability that the change-point occurred between 4:40pm and 4:50pm?"</em></li>
             <li>Bayesian approaches can provide a more complete understanding of complex (high dimensional) problems</li>
             <li>Bayesian modelling is a common use case for the Metropolis algorithm</li>
         </ul>
 
         <h2>The model</h2>
 
-        <p>We propose a model for the oxygen level consisting of the unknown change-point time $\tau$ in fractional hours (e.g. 14.5 is 2:30pm) and two normal distributions of oxygen levels (mg/L) with unknown means $\mu_1$ <em>(the mean oxygen level before $\tau$)</em> and $\mu_2$ <em>(the mean oxygen level after $\tau$)</em>. For this example (to keep the model parameters within 3 dimensions) we'll assume that the standard deviation $\sigma$ of oxygen levels is a known constant of +/- 0.9 mg/L. The model of oxygen level $l$ at time $t$ can be expressed as:</p>
+        <p>We propose a model for the oxygen level consisting of the unknown change-point time $\tau$ in fractional hours (e.g. 14.5 is 2:30pm) and two normal distributions of oxygen levels (mg/L) with unknown means $\mu_1$ <em>(the mean oxygen level before $\tau$)</em> and $\mu_2$ <em>(the mean oxygen level after $\tau$)</em>. Each attribute of the underlying reality is a model parameter. For this example (to keep the model parameters within 3 dimensions) we'll assume that the standard deviation $\sigma$ of oxygen levels is a known constant of +/- 0.9 mg/L. The model of oxygen level $l$ at time $t$ can be expressed as:</p>
 
         $$l_t \sim
         \begin{cases}
@@ -254,12 +306,12 @@
 
         <div class="callout">
             <p class="callout-title">Note</p>
-            <p>We <em>assume</em> that the model is true, the challenge is to find the correct parameters. For the purpose of our example the model will actually be true &mdash; the process which generates the observed data will be two Normal distributions and a change point. In a real world situation we might want to compare our model against other models, including a model which has no change point (the null hypothesis). Instead of claiming models are true, we say that there are models which are better or worse at describing and predicting reality.</p>
+            <p>We <em>assume</em> that the model is true, the challenge is to find the correct values of the parameters. For the purpose of our example the model will <em>actually</em> be true &mdash; the process which generates the observed data will indeed be two Normal distributions and a change point. In a real world situation we might want to compare our model against other models, including a model which has no change point (the null hypothesis). Instead of claiming that models are true or false, we say that there are models which are better or worse at describing and predicting reality.</p>
         </div>
 
         <h2>Bayes Theorem</h2>
 
-        <p>The data is constant and known. The real values of $\tau, \mu_1$ and $\mu_2$ are unknown and we will vary their hypothetical values to build a probability distribution for all possible hypotheses, where each unique combination of values for $\tau, \mu_1$ and $\mu_2$ form a hypothesis $\theta_i$ in the set of hypotheses under consideration $\theta$. This will allow us to find the most likely hypothesis (the most likely values of $\tau, \mu_1$ and $\mu_2$.)</p>
+        <p>The data is constant and known. The real values of $\tau, \mu_1$ and $\mu_2$ are unknown and we will vary their hypothetical values to build a probability distribution for all possible hypotheses, where each unique combination of values for $\tau, \mu_1$ and $\mu_2$ forms a hypothesis $\theta_i$ in the set of hypotheses under consideration $\theta$. This will allow us to find the most likely hypothesis (the most likely values of $\tau, \mu_1$ and $\mu_2$.)</p>
 
         <p>Bayes Theorem relates three functions that depend on $\theta$ and a constant factor that involves the data alone.</p>
 
@@ -272,7 +324,7 @@
         <div class="callout">
             <p class="callout-title">Likelihood versus probability</p>
             <p>If we held the hypothesis $\theta$ constant and calculated $p(\text{data} \mid \theta)$ for all possible $\text{data}$ sets then $p(\text{data} \mid \theta)$ would be a probability distribution because the integral over $\text{data}$ would always be equal to 1. But because we are holding $\text{data}$ constant and the integral over $\theta$ <strong>does not</strong> always equal 1, $p(\text{data} \mid \theta)$ expresses a likelihood (a score) not a probability, this is why we call it a likelihood function and not a probability distribution.</p>
-            <p>We can use ratios of likelihoods to express the probability of one outcome relative to another, but not their absolute probabilities &mdash; for that we would need to create a probability distribution by dividing the likelihood function by a normalisation factor &mdash; see the definition of $p(\text{data})$ below.</p>
+            <p>We can use ratios of likelihoods to express the probability of one outcome relative to another, but not their absolute probabilities. To obtain absolute probabilities we would need to create a probability distribution by dividing the likelihood function by a normalisation factor &mdash; see the definition of $p(\text{data})$ below.</p>
         </div>
 
         <p>$p(\theta)$ <strong>the prior distribution</strong> &mdash; the probability distribution of hypotheses $\theta$ given our beliefs before seeing the data. Imagine that we haven't seen the data, in our state of ignorance what would our beliefs about time $\tau$ and the means $\mu_1$ and $\mu_2$ be? We need to express those beliefs as a probability distribution.</p>
@@ -287,41 +339,43 @@
 
         <h3>Practical limitations on using Bayes Theorem</h3>
 
-        <p>The stumbling block is often the integral for the evidence $p(\text{data})$.</p>
+        <p>The integral for the evidence $p(\text{data})$ is often a stumbling block.</p>
 
-        <p>Ideally we want to compute the exact values of integrals by deriving their analytical, closed-form solution.</p>
+        <p>Ideally we would like to compute the exact values of integrals by deriving their analytical, closed-form solution:</p>
 
-        <p>E.g.</p>
+        $$
+            \int x^2 \, dx = \frac{1}3x^3 + C
+            \\
+            \int_{2}^{5} x^2 \, dx = (\frac{1}3 \cdot 5^3 + C) - (\frac{1}3 \cdot 2^3 + C) = 39
+        $$
 
-        $$\int x^2 \, dx = \frac{1}3x^3 + C$$
-
-        $$\int_{2}^{5} x^2 \, dx = (\frac{1}3 \cdot 5^3 + C) - (\frac{1}3 \cdot 2^3 + C) = 39$$
-
-        <p>When finding a closed-form solution is analytically intractable we revert to numerical integration to find an inexact solution. The above example would be solved by computing ("the area under the curve"):</p>
+        <p>When finding a closed-form solution is analytically intractable we can use numerical integration to find an inexact solution. The above example would be solved by computing <em>&ldquo;the area under the curve&rdquo;</em>:</p>
 
         $$\int_{2}^{5} x^{2}\,dx \approx \sum_{i=1}^{n} f(x_i^{*})\,\Delta x$$
 
-        <p>Ideally we would obtain an analytical solution for $p(\text{data})$ by deriving a closed form solution of the integral:</p>
+        <p>We would like an analytical solution for $p(\text{data})$:</p>
 
         $$p(\mathrm{data}) = \int p(\mathrm{data}\mid \theta) \cdot p(\theta)\, d\theta$$
 
-        <p>Which in our model is a three-dimensional integral:</p>
+        <p>In our model this is a three-dimensional integral:</p>
 
         $$p(\mathrm{data}) \;=\; \iiint p(\mathrm{data}\mid \tau,\mu_1,\mu_2)\, p(\tau)\, p(\mu_1)\, p(\mu_2)\, d\tau\, d\mu_1\, d\mu_2$$
 
-        <p>For our simple model, this is solvable but very often it isn't. As a minor alteration we could acknowledge that in reality oxygen levels cannot be negative and represent that condition by using a LogNormal instead of a Normal distribution. Modelling our prior beliefs about the means $\mu_1$ and $\mu_2$ with a LogNormal distribution would make $p(\text{data})$ analytically intractable.</p>
+        <p>For our simple model, this is in fact solvable. Very often it isn't. For example, we could (but we won't) acknowledge that negative oxygen levels are not physically possible and represent that condition in our model by using a LogNormal instead of a Normal distribution. That minor change would make $p(\text{data})$ analytically intractable.</p>
 
-        <p>Numerical integration (quadrature) would mean 1) splitting the 3-dimensional space into a grid of many blocks, 2) calculating $p(\mathrm{data}\mid \tau,\mu_1,\mu_2)\, p(\tau)\, p(\mu_1)\, p(\mu_2)$ for each grid block by plugging in the values of $\tau$, $\mu_1$ and $\mu_2$ at that grid block and multiplying by its volume, and 3) summing the calculation over all grid blocks.</p>
+        <p>If we <em>did do that</em>, we might then use numerical integration (quadrature): 1) we split the 3-dimensional space into a grid of many blocks, 2) we calculate $p(\mathrm{data}\mid \tau,\mu_1,\mu_2)\, p(\tau)\, p(\mu_1)\, p(\mu_2)$ for each block by plugging in the values of $\tau$, $\mu_1$ and $\mu_2$ at that grid block and multiplying by its volume, and 3) we sum the calculations over all grid blocks.</p>
 
-        <p>With just three dimensions (parameters) that is again easily doable.</p>
+        <p>With just three dimensions (parameters) that is also easily doable.</p>
 
-        <p>Numerical integration becomes infeasible as the number of model parameters increases, typically beyond 5&ndash;10. E.g. numerically integrating over 7 parameters with a low grid resolution of 20 points per parameter is 1.3 billion computations. Increase that to 10 parameters and it becomes 10 trillion computations.</p>
+        <p>Numerical integration rapidly becomes infeasible as the number of model parameters increases, typically beyond 5&ndash;10. Numerically integrating over 7 parameters with a low grid resolution of 20 points per parameter is 1.3 billion computations. Increase that to 10 parameters and it becomes 10 trillion computations.</p>
 
         <p>Another limitation of numerical integration is that it struggles to capture a complex posterior distribution (e.g. skewed, many modes).</p>
 
-        <p><strong>When $p(\text{data})$ is analytically intractable and numerical computation is too expensive or the posterior distribution is too complex, the other alternative is to use a Markov chain Monte Carlo algorithm like Metropolis.</strong></p>
+        <p><strong>When $p(\text{data})$ is analytically intractable and numerical computation is too expensive or the posterior distribution is too complex, an alternative is to use a Markov chain Monte Carlo method like the Metropolis algorithm.</strong></p>
 
         <h2>The Metropolis algorithm</h2>
+
+        <h3>The posterior odds</h3>
 
         <p>Recall Bayes Theorem:</p>
 
@@ -349,7 +403,7 @@
 
         <ol>
             <li>Select an initial current hypothesis $\theta_\text{current}$ by choosing values for parameters $\tau$, $\mu_1$ and $\mu_2$ anywhere in the model probability space (this initial starting position is often informed by the data).</li>
-            <li>Propose a new hypothesis $\theta_\text{proposal}$: select new values for the parameters $\tau$, $\mu_1$ and $\mu_2$ by taking a random sample within a defined range around each of the existing values for $\tau$, $\mu_1$ and $\mu_2$ in $\theta_\text{current}$ (the range for each parameter is called a proposal width).</li>
+            <li>Propose a new hypothesis $\theta_\text{proposal}$: select new values for the parameters $\tau$, $\mu_1$ and $\mu_2$ by picking a random value within a defined range around each of the existing values for $\tau$, $\mu_1$ and $\mu_2$ in $\theta_\text{current}$ (the range for each parameter is called a proposal width).</li>
             <li><p>Calculate the <strong>posterior odds</strong> for $\theta_\text{proposal}$ over $\theta_\text{current}$.</p>
 
                 $$\frac{p(\theta_\text{proposal}\mid \text{data})}{p(\theta_\text{current}\mid \text{data})}=\frac{p(\text{data}\mid \theta_\text{proposal})}{p(\text{data}\mid \theta_\text{current})}\cdot\frac{p(\theta_\text{proposal})}{p(\theta_\text{current})}$$
