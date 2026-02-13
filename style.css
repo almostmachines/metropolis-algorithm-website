@@ -129,10 +129,14 @@ li:last-child { margin-bottom: 0; }
     border-radius: 0 4px 4px 0;
 }
 
-strong { font-weight: 700; }
+strong {
+    font-weight: 700;
+    color: #ffcdcd;
+}
+
 em { font-style: italic; }
 
-.katex { color: var(--text); }
+.katex { color: #ffb567; }
 
 .katex-display {
     margin: 2.3rem 0;
