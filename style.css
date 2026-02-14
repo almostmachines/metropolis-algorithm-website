@@ -425,7 +425,7 @@ em { font-style: italic; }
     background: rgba(34, 211, 238, 0.1);
 }
 
-@media (max-width: 1599px) {
+@media (max-width: 1649px) {
     .floating-nav {
         display: none;
         left: auto;
