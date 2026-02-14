@@ -173,6 +173,202 @@ em { font-style: italic; }
     height: 1rem;
 }
 
+.photo-attribution {
+    display: block;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+}
+
+.attribution-dialog {
+    background: var(--bg-raised);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-width: 40rem;
+    padding: 0;
+}
+
+.attribution-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.attribution-dialog__content {
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+.attribution-dialog__content p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.attribution-dialog__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.25rem;
+}
+
+.attribution-dialog__close:hover {
+    color: var(--text);
+}
+
+/* ── Floating nav ── */
+
+.floating-nav {
+    position: fixed;
+    top: 1.5rem;
+    left: calc(50% + var(--max-width) / 2 + 1rem);
+    right: 1rem;
+    max-width: 260px;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    z-index: 100;
+    background: rgba(7, 9, 14, 0.92);
+    border: 1px solid rgba(34, 211, 238, 0.15);
+    border-radius: 8px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+        0 0 20px rgba(34, 211, 238, 0.06),
+        0 4px 24px rgba(0, 0, 0, 0.4);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(34, 211, 238, 0.2) transparent;
+}
+
+.floating-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.floating-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.floating-nav::-webkit-scrollbar-thumb {
+    background: rgba(34, 211, 238, 0.2);
+    border-radius: 2px;
+}
+
+.floating-nav__header {
+    position: sticky;
+    top: 0;
+    background: rgba(7, 9, 14, 0.95);
+    padding: 0.75rem 1rem 0.5rem;
+    border-bottom: 1px solid rgba(34, 211, 238, 0.1);
+    z-index: 1;
+}
+
+.floating-nav__title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #22d3ee;
+}
+
+.floating-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0 0.75rem;
+}
+
+.floating-nav__item {
+    margin: 0;
+}
+
+.floating-nav__item a {
+    display: block;
+    padding: 0.25rem 1rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--muted);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.floating-nav__item a:hover {
+    color: var(--text);
+    background: rgba(34, 211, 238, 0.05);
+}
+
+.floating-nav__link--active {
+    color: #adffea !important;
+    border-left-color: #22d3ee !important;
+    background: rgba(34, 211, 238, 0.08);
+}
+
+.floating-nav__item--h1 a { padding-left: 1rem; font-weight: 700; color: var(--accent); font-size: 0.82rem; }
+.floating-nav__item--h2 a { padding-left: 1rem; }
+.floating-nav__item--h3 a { padding-left: 1.75rem; }
+.floating-nav__item--h4 a { padding-left: 2.5rem; }
+.floating-nav__item--h5 a { padding-left: 3.25rem; font-size: 0.74rem; }
+.floating-nav__item--h6 a { padding-left: 4rem; font-size: 0.72rem; }
+
+.floating-nav-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 101;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    background: rgba(7, 9, 14, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #22d3ee;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 0 12px rgba(34, 211, 238, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.floating-nav-toggle:hover {
+    border-color: rgba(34, 211, 238, 0.4);
+    box-shadow:
+        0 0 16px rgba(34, 211, 238, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.floating-nav-toggle--active {
+    border-color: rgba(34, 211, 238, 0.5);
+    background: rgba(34, 211, 238, 0.1);
+}
+
+@media (max-width: 1599px) {
+    .floating-nav {
+        display: none;
+        left: auto;
+        right: 1rem;
+        top: 3.5rem;
+        width: 280px;
+        max-width: calc(100vw - 2rem);
+    }
+
+    .floating-nav--open {
+        display: block;
+    }
+
+    .floating-nav-toggle {
+        display: flex;
+    }
+}
+
 @media (max-width: 600px) {
     body {
         font-size: 1rem;

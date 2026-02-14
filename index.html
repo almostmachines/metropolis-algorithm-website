@@ -11,6 +11,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav id="floating-nav" class="floating-nav">
+        <div class="floating-nav__header">
+            <span class="floating-nav__title">Nav</span>
+        </div>
+        <ul class="floating-nav__list" id="floating-nav-list"></ul>
+    </nav>
+    <button id="floating-nav-toggle" class="floating-nav-toggle" aria-label="Toggle navigation">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect y="3" width="20" height="2" rx="1" fill="currentColor"/>
+            <rect y="9" width="20" height="2" rx="1" fill="currentColor"/>
+            <rect y="15" width="20" height="2" rx="1" fill="currentColor"/>
+        </svg>
+    </button>
     <article>
 
         <svg class="logo" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Metropolis Algorithm">
@@ -810,13 +823,77 @@
 
             <picture class="textWithImage__image">
                 <img alt="Nicholas Metropolis playing anti-clerical chess against MANIAC I" src="./chess.webp">
+                <a href="#" class="photo-attribution" onclick="document.getElementById('attribution-modal').showModal(); return false;">attribution</a>
             </picture>
+
+            <dialog id="attribution-modal" class="attribution-dialog" onclick="if(event.target===this)this.close()">
+                <div class="attribution-dialog__content">
+                    <button class="attribution-dialog__close" onclick="this.closest('dialog').close()">&times;</button>
+                    <p>Unless otherwise indicated, this information has been authored by an employee or employees of the Los Alamos National Security, LLC (LANS), operator of the Los Alamos National Laboratory under Contract No. DE-AC52-06NA25396 with the U.S. Department of Energy. The U.S. Government has rights to use, reproduce, and distribute this information. The public may copy and use this information without charge, provided that this Notice and any statement of authorship are reproduced on all copies. Neither the Government nor LANS makes any warranty, express or implied, or assumes any liability or responsibility for the use of this information.</p>
+                </div>
+            </dialog>
         </div>
 
         <h3>Metropolis-Hastings</h3>
 
         <p>In 1970, <a href="https://en.wikipedia.org/wiki/W._K._Hastings" target="_blank">Wilfred Hastings</a> extended the Metropolis algorithm to handle asymmetrical proposal distributions. This generalised algorithm became known as the <a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm" target="_blank">Metropolis-Hastings algorithm</a>.</p>
     </article>
+
+    <script>
+    (function() {
+        const nav = document.getElementById('floating-nav');
+        const list = document.getElementById('floating-nav-list');
+        const toggle = document.getElementById('floating-nav-toggle');
+        const headings = document.querySelectorAll('article h1, article h2, article h3, article h4, article h5, article h6');
+
+        headings.forEach(function(h, i) {
+            if (!h.id) h.id = 'heading-' + i;
+            const level = parseInt(h.tagName[1]);
+            const li = document.createElement('li');
+            li.className = 'floating-nav__item floating-nav__item--h' + level;
+            const a = document.createElement('a');
+            a.href = '#' + h.id;
+            a.textContent = h.textContent;
+            a.addEventListener('click', function() {
+                if (window.innerWidth < 1600) {
+                    nav.classList.remove('floating-nav--open');
+                    toggle.classList.remove('floating-nav-toggle--active');
+                }
+            });
+            li.appendChild(a);
+            list.appendChild(li);
+        });
+
+        toggle.addEventListener('click', function() {
+            nav.classList.toggle('floating-nav--open');
+            toggle.classList.toggle('floating-nav-toggle--active');
+        });
+
+        // Close nav when clicking outside on small screens
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 1600 && nav.classList.contains('floating-nav--open')) {
+                if (!nav.contains(e.target) && e.target !== toggle && !toggle.contains(e.target)) {
+                    nav.classList.remove('floating-nav--open');
+                    toggle.classList.remove('floating-nav-toggle--active');
+                }
+            }
+        });
+
+        // Highlight current section
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    list.querySelectorAll('a').forEach(function(a) {
+                        a.classList.toggle('floating-nav__link--active', a.getAttribute('href') === '#' + id);
+                    });
+                }
+            });
+        }, { rootMargin: '0px 0px -70% 0px', threshold: 0 });
+
+        headings.forEach(function(h) { observer.observe(h); });
+    })();
+    </script>
 
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
