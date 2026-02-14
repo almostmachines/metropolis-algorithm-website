@@ -767,6 +767,47 @@
             <li>Repeat 2&ndash;6) until you have enough samples that the posterior distribution is stable.</li>
         </ol>
 
+        <h4>Run the algorithm</h4>
+
+        <p>In this <a href="https://github.com/almostmachines/metropolis-cpd-script" target="_blank">Github repo</a> there's a Python script that will run the full experiment, give it a go.</p>
+
+        <h3>Considerations</h3>
+
+        <h4>Proposal widths</h4>
+
+        <p>We didn't discuss how to select these values. In both of the simulations you can change the proposal width for each parameter in the settings. Try changing these and observe how it affects the exploration of the probability space and the acceptance rate displayed in the results. A common rule of thumb is to tune proposal widths to get an acceptance rate around 20-50% (the optimal depends on the dimensionality and other factors, but this range is a reasonable target).</p>
+
+        <p>If the proposal width is too narrow, you take tiny steps. Each proposal is very close to where you are, so it's almost always accepted (the posterior doesn't change much over small distances). Your acceptance rate is high, but you explore the space slowly — it takes many iterations to move from one region to another. The chain is highly correlated: consecutive samples are nearly identical.</p>
+
+        <p>If the proposal width is too wide, you take big leaps. Most of the time you land somewhere with much lower posterior probability, so you reject and stay put. Your acceptance rate is low, and you spend long stretches stuck in place, occasionally making a large jump. Again, you explore inefficiently.</p>
+
+        <p>The sweet spot is somewhere in between — steps large enough to move meaningfully through the space, but not so large that you're constantly rejected.</p>
+
+        <h4>The initial hypothesis</h4>
+
+        <p>Ideally we would like the initial hypothesis to be within or close to the posterior distribution. For simple problems, visual inspection of the data will often suffice. It may make sense to base it on our prior beliefs if those are informative. Domain knowledge may also help guide selection. A more sophisticated approach would be to use maximum likelihood estimation to find a point close to the posterior mode. Another approach is to do multiple runs, each one starting with a random initial hypotheses. If the multiple runs converge on similar estimates of the posterior distribution this gives confidence that the initial hypothesis is not affecting the results.</p>
+
+        <h2>History</h2>
+
+        <h3>Chess and thermodynamics</h3>
+
+        <div class="textWithImage">
+            <div class="textWithImage__text">
+                    <p>On the right is the first coauthor of the Metropolis algorithm, <a href="https://en.wikipedia.org/wiki/Nicholas_Metropolis" target="_blank">Nicholas Metropolis</a>, playing a variant of chess against the computer <a href="https://en.wikipedia.org/wiki/MANIAC_I" target="_blank">MANIAC I</a> at the Los Alamos Scientific Laboratory in the 1950s.</p>
+
+                <p>MANIAC ran the first computer aided computation of the <a href="https://en.wikipedia.org/wiki/Equation_of_State_Calculations_by_Fast_Computing_Machines" target="_blank">Metropolis algorithm</a>.</p>
+
+                <p>It was also the first computer to <a href="https://en.wikipedia.org/wiki/Los_Alamos_chess" target="_blank">beat a human</a> at a game of (simplified) chess in 1953. The chess was called anti-clerical chess because there were no bishops!</p>
+            </div>
+
+            <picture class="textWithImage__image">
+                <img alt="Nicholas Metropolis playing anti-clerical chess against MANIAC I" src="./chess.jpg">
+            </picture>
+        </div>
+
+        <h3>Metropolis-Hastings</h3>
+
+        <p>In 1970, <a href="https://en.wikipedia.org/wiki/W._K._Hastings" target="_blank">Wilfred Hastings</a> extended the Metropolis algorithm to handle asymmetrical proposal distributions. This generalised algorithm became known as the <a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm" target="_blank">Metropolis-Hastings algorithm</a>.</p>
     </article>
 
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
