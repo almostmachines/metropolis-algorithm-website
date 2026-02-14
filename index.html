@@ -116,7 +116,7 @@
             <div class="textWithImage__text">
                 <p>To see the Metropolis algorithm in action, try this <a href="https://linear-regression.metropolis-algorithm.com" target="_blank">interactive simulator.</a></p>
 
-                <p>The yellow square is some unknown part of reality, an entity or process floating in probability space. The entity has three <em>attributes</em> and the range of possible values for each attribute is represented by an axis in the 3D space. The simulator shows us its location (the exact values of its attributes) but in a real world experiment those are unknown to us. All we have are some scattered, noisy observations.</p>
+                <p>The yellow square is some unknown part of reality, an entity or process floating in probability space. The entity has three <em>attributes</em>, each one is represented by an axis in the 3D space. In a real world setting, the location of the yellow square (the values of its attributes) would be unknown to us. All we have are some scattered, noisy observations.</p>
 
                 <p>The cyan circle is our starting point, representing our initial <em>hypothesis</em> about the value of each attribute.</p>
             </div>
@@ -128,7 +128,7 @@
 
         <div class="textWithImage">
             <div class="textWithImage__text">
-                <p>Press the <strong>Full Auto</strong> button in the sidebar. Watch the algorithm find the yellow square. You can rotate, pan and zoom using your mouse controls / trackpad / touch. Press <strong>Reset</strong> and then press <strong>Full Auto</strong> again. Observe that the algorithm takes a different trajectory. It&rsquo;s a homing missile that finds the target and then encloses it within its probability cloud <em>(posterior distribution)</em>.</p>
+                <p>Press the <strong>Full Auto</strong> button in the sidebar and watch the algorithm locate the yellow square. You can rotate, pan and zoom using your mouse controls / trackpad / touch. Press <strong>Reset</strong> and then press <strong>Full Auto</strong> a few more times. Observe that the algorithm takes a different trajectory every time. It&rsquo;s a homing missile that finds the target and encloses it within its probability cloud <em>(posterior distribution)</em>.</p>
             </div>
 
             <picture class="textWithImage__image">
@@ -138,7 +138,7 @@
 
         <div class="textWithImage">
             <div class="textWithImage__text">
-                <p>The <strong>Results</strong> section shows a plot. The yellow line is the actual entity we're trying to capture, it's a linear process. Around the yellow line are white dots representing individual observations of the process. The three attributes then are: the slope of the line, the y-axis intercept of the line, and the noise <em>(standard deviation)</em> of the observations.</p>
+                <p>The <strong>Results</strong> section shows this plot. The yellow line is the actual entity that we're trying to capture, in this experiment it's a linear process. Around the yellow line are white dots representing individual observations of the process. The three attributes are: the slope of the line, the y-axis intercept of the line, and the noise <em>(standard deviation)</em> of the observations.</p>
 
                 <p>The cyan dashed line is our best estimate of the yellow line based on the probability cloud <em>(posterior distribution)</em>. Click <strong>Reset</strong> and <strong>Full Auto</strong> again and watch the cyan line converge upon the yellow line as the algorithm progresses.</p>
 
@@ -292,7 +292,7 @@
 
         <h2>The model</h2>
 
-        <p>We propose a model for the oxygen level consisting of the unknown change-point time $\tau$ in fractional hours (e.g. 14.5 is 2:30pm) and two normal distributions of oxygen levels (mg/L) with unknown means $\mu_1$ <em>(the mean oxygen level before $\tau$)</em> and $\mu_2$ <em>(the mean oxygen level after $\tau$)</em>. Each attribute of the underlying reality is a model parameter. For this example (to keep the model parameters within 3 dimensions) we'll assume that the standard deviation $\sigma$ of oxygen levels is a known constant of +/- 0.9 mg/L. The model of oxygen level $l$ at time $t$ can be expressed as:</p>
+        <p>We propose a model for the oxygen level consisting of the unknown change-point time $\tau$ in fractional hours (e.g. 14.5 is 2:30pm) and two normal distributions of oxygen levels (mg/L) with unknown means $\mu_1$ <em>(the mean oxygen level before $\tau$)</em> and $\mu_2$ <em>(the mean oxygen level after $\tau$)</em>. Each unknown attribute of the underlying reality $\tau$, $\mu_1$, $\mu_2$, is a model parameter. For the sake of keeping the model parameters within 3 dimensions, the real standard deviation $\sigma$ of oxygen levels is a known constant of +/- 0.9 mg/L. The model of oxygen level $l$ at time $t$ can be expressed as:</p>
 
         $$l_t \sim
         \begin{cases}
@@ -309,9 +309,22 @@
             <p>We <em>assume</em> that the model is true, the challenge is to find the correct values of the parameters. For the purpose of our example the model will <em>actually</em> be true &mdash; the process which generates the observed data will indeed be two Normal distributions and a change point. In a real world situation we might want to compare our model against other models, including a model which has no change point (the null hypothesis). Instead of claiming that models are true or false, we say that there are models which are better or worse at describing and predicting reality.</p>
         </div>
 
+        <h2>A new simulator</h2>
+
+        <div class="textWithImage">
+            <div class="textWithImage__text">
+                <p>Have a go with <a href="https://change-point-detection.metropolis-algorithm.com/" target="_blank">this simulator</a> for our change-point model.</p>
+                <p>The <strong>Results</strong> section shows a plot of the observational data and the real and estimated values of $\tau$, $\mu_1$, $\mu_2$ and the <strong>effect size</strong> ($\mu_2 - \mu_1$).</p>
+            </div>
+
+            <picture class="textWithImage__image">
+                <img alt="Simulator results report" src="./change-point-results.webp">
+            </picture>
+        </div>
+
         <h2>Bayes Theorem</h2>
 
-        <p>The data is constant and known. The real values of $\tau, \mu_1$ and $\mu_2$ are unknown and we will vary their hypothetical values to build a probability distribution for all possible hypotheses, where each unique combination of values for $\tau, \mu_1$ and $\mu_2$ forms a hypothesis $\theta_i$ in the set of hypotheses under consideration $\theta$. This will allow us to find the most likely hypothesis (the most likely values of $\tau, \mu_1$ and $\mu_2$.)</p>
+        <p>The data is constant and known. The real values of $\tau, \mu_1$ and $\mu_2$ are unknown, we will vary their hypothetical values and calculate the probability of each combination to build a probability distribution for all possible hypotheses. Each unique combination of values for $\tau, \mu_1$ and $\mu_2$ forms a hypothesis $\theta_i$ in the set of hypotheses under consideration $\theta$. This will allow us to find the most likely hypothesis (the most likely values of $\tau, \mu_1$ and $\mu_2$.)</p>
 
         <p>Bayes Theorem relates three functions that depend on $\theta$ and a constant factor that involves the data alone.</p>
 
@@ -324,7 +337,7 @@
         <div class="callout">
             <p class="callout-title">Likelihood versus probability</p>
             <p>If we held the hypothesis $\theta$ constant and calculated $p(\text{data} \mid \theta)$ for all possible $\text{data}$ sets then $p(\text{data} \mid \theta)$ would be a probability distribution because the integral over $\text{data}$ would always be equal to 1. But because we are holding $\text{data}$ constant and the integral over $\theta$ <strong>does not</strong> always equal 1, $p(\text{data} \mid \theta)$ expresses a likelihood (a score) not a probability, this is why we call it a likelihood function and not a probability distribution.</p>
-            <p>We can use ratios of likelihoods to express the probability of one outcome relative to another, but not their absolute probabilities. To obtain absolute probabilities we would need to create a probability distribution by dividing the likelihood function by a normalisation factor &mdash; see the definition of $p(\text{data})$ below.</p>
+            <p>We can use ratios of likelihoods to express the probability of one outcome relative to another, but not their absolute probabilities.</p>
         </div>
 
         <p>$p(\theta)$ <strong>the prior distribution</strong> &mdash; the probability distribution of hypotheses $\theta$ given our beliefs before seeing the data. Imagine that we haven't seen the data, in our state of ignorance what would our beliefs about time $\tau$ and the means $\mu_1$ and $\mu_2$ be? We need to express those beliefs as a probability distribution.</p>
@@ -333,7 +346,7 @@
 
         $$p(\mathrm{data}) = \int p(\mathrm{data}\mid \theta) \cdot p(\theta)\, d\theta$$
 
-        <p>This is the constant, normalisation factor which turns the product of the <strong>likelihood function</strong> and the <strong>prior probability distribution</strong> into the <strong>posterior probability distribution</strong>.</p>
+        <p>This is the constant, normalisation factor which turns the product of the <strong>likelihood function</strong> and the <strong>prior probability distribution</strong> from being a likelihood ratio into the <strong>posterior probability distribution</strong>.</p>
 
         <blockquote><p>Bayes Theorem restated &mdash; Given the data, the probability of a hypothesis equals how likely the observed data would be if the hypothesis were true, multiplied by the plausibility of the hypothesis in general (without seeing the data), divided by how likely the observed data is overall (regardless of which hypothesis is true.)</p></blockquote>
 
@@ -341,7 +354,7 @@
 
         <p>The integral for the evidence $p(\text{data})$ is often a stumbling block.</p>
 
-        <p>Ideally we would like to compute the exact values of integrals by deriving their analytical, closed-form solution:</p>
+        <p>Ideally we would like to compute the exact values of integrals by deriving their analytical, closed-form solutions:</p>
 
         $$
             \int x^2 \, dx = \frac{1}3x^3 + C
@@ -349,7 +362,7 @@
             \int_{2}^{5} x^2 \, dx = (\frac{1}3 \cdot 5^3 + C) - (\frac{1}3 \cdot 2^3 + C) = 39
         $$
 
-        <p>When finding a closed-form solution is analytically intractable we can use numerical integration to find an inexact solution. The above example would be solved by computing <em>&ldquo;the area under the curve&rdquo;</em>:</p>
+        <p>When finding a closed-form solution is analytically intractable we can use numerical integration to find an inexact solution. The above example could be solved by computing <em>&ldquo;the area under the curve&rdquo;</em>:</p>
 
         $$\int_{2}^{5} x^{2}\,dx \approx \sum_{i=1}^{n} f(x_i^{*})\,\Delta x$$
 
@@ -361,15 +374,15 @@
 
         $$p(\mathrm{data}) \;=\; \iiint p(\mathrm{data}\mid \tau,\mu_1,\mu_2)\, p(\tau)\, p(\mu_1)\, p(\mu_2)\, d\tau\, d\mu_1\, d\mu_2$$
 
-        <p>For our simple model, this is in fact solvable. Very often it isn't. For example, we could (but we won't) acknowledge that negative oxygen levels are not physically possible and represent that condition in our model by using a LogNormal instead of a Normal distribution. That minor change would make $p(\text{data})$ analytically intractable.</p>
+        <p>For our simple model, this is in fact analytically tractable. Very often it isn't. For example, we could (but we won't) acknowledge that negative oxygen levels are not physically possible and represent that condition in our model by using a LogNormal instead of a Normal distribution. That minor change would make $p(\text{data})$ analytically intractable.</p>
 
-        <p>If we <em>did do that</em>, we might then use numerical integration (quadrature): 1) we split the 3-dimensional space into a grid of many blocks, 2) we calculate $p(\mathrm{data}\mid \tau,\mu_1,\mu_2)\, p(\tau)\, p(\mu_1)\, p(\mu_2)$ for each block by plugging in the values of $\tau$, $\mu_1$ and $\mu_2$ at that grid block and multiplying by its volume, and 3) we sum the calculations over all grid blocks.</p>
+        <p>If we <em>did do that</em>, we might then use numerical integration <em>(quadrature)</em>: 1) we split the 3-dimensional space into a grid of many small blocks, 2) we calculate $p(\mathrm{data}\mid \tau,\mu_1,\mu_2)\, p(\tau)\, p(\mu_1)\, p(\mu_2)$ by plugging in the values of $\tau$, $\mu_1$ and $\mu_2$ for each grid block and multiplying by the block volume, and 3) we sum the calculations over all grid blocks.</p>
 
         <p>With just three dimensions (parameters) that is also easily doable.</p>
 
-        <p>Numerical integration rapidly becomes infeasible as the number of model parameters increases, typically beyond 5&ndash;10. Numerically integrating over 7 parameters with a low grid resolution of 20 points per parameter is 1.3 billion computations. Increase that to 10 parameters and it becomes 10 trillion computations.</p>
+        <p>Numerical integration rapidly becomes infeasible as the number of parameters increases, typically beyond 5&ndash;10 parameters. Numerically integrating over 7 parameters with a low grid resolution of 20 points per parameter is 1.3 billion computations. Increase that to 10 parameters and it becomes 10 trillion computations.</p>
 
-        <p>Another limitation of numerical integration is that it struggles to capture a complex posterior distribution (e.g. skewed, many modes).</p>
+        <p>Another limitation is that numerical integration struggles to accurately represent a complex posterior distribution (e.g. skewed, many modes).</p>
 
         <p><strong>When $p(\text{data})$ is analytically intractable and numerical computation is too expensive or the posterior distribution is too complex, an alternative is to use a Markov chain Monte Carlo method like the Metropolis algorithm.</strong></p>
 
@@ -381,7 +394,7 @@
 
         $$p(\theta \mid \text{data}) = \frac{p(\text{data} \mid \theta) \cdot p(\theta)}{p(\text{data})}$$
 
-        <p>If we divide Bayes theorem for hypothesis $\theta_2$ by Bayes theorem for hypothesis $\theta_1$ the normalisation factor $p(\text{data})$ cancels out:</p>
+        <p>If we divide Bayes theorem for any hypothesis $\theta_2$ by Bayes theorem for any other hypothesis $\theta_1$ the normalisation factor $p(\text{data})$ cancels out:</p>
 
         $$\begin{aligned}
         \frac{p(\theta_2\mid \text{data})}{p(\theta_1\mid \text{data})} &amp;=\frac{p(\text{data} \mid \theta_2) \cdot p(\theta_2)}{p(\text{data})} \cdot\frac{p(\text{data})}{p(\text{data} \mid \theta_1) \cdot p(\theta_1)} \\
@@ -403,7 +416,7 @@
 
         <ol>
             <li>Select an initial current hypothesis $\theta_\text{current}$ by choosing values for parameters $\tau$, $\mu_1$ and $\mu_2$ anywhere in the model probability space (this initial starting position is often informed by the data).</li>
-            <li>Propose a new hypothesis $\theta_\text{proposal}$: select new values for the parameters $\tau$, $\mu_1$ and $\mu_2$ by picking a random value within a defined range around each of the existing values for $\tau$, $\mu_1$ and $\mu_2$ in $\theta_\text{current}$ (the range for each parameter is called a proposal width).</li>
+            <li>Propose a new hypothesis $\theta_\text{proposal}$: select new values for the parameters $\tau$, $\mu_1$ and $\mu_2$ by picking a random value within a defined range <em>(a proposal width)</em> around each of the existing values for $\tau$, $\mu_1$ and $\mu_2$ in $\theta_\text{current}$.</li>
             <li><p>Calculate the <strong>posterior odds</strong> for $\theta_\text{proposal}$ over $\theta_\text{current}$.</p>
 
                 $$\frac{p(\theta_\text{proposal}\mid \text{data})}{p(\theta_\text{current}\mid \text{data})}=\frac{p(\text{data}\mid \theta_\text{proposal})}{p(\text{data}\mid \theta_\text{current})}\cdot\frac{p(\theta_\text{proposal})}{p(\theta_\text{current})}$$
@@ -413,11 +426,11 @@
                 <ul>
                     <li>If $\theta_\text{proposal}$ is <em>more</em> likely than $\theta_\text{current}$ (posterior odds &ge; 1) then $\theta_\text{accepted}=\theta_\text{proposal}$</li>
                     <li>
-                        <p>If $\theta_\text{proposal}$ is <em>less</em> likely (posterior odds &lt; 1), we use a random number generator to accept one of the hypotheses by chance. The probability of accepting $\theta_\text{proposal}$ is set to the posterior odds and therefore the probability of accepting $\theta_\text{current}$ is set to 1 &minus; posterior odds.</p>
+                        <p>If $\theta_\text{proposal}$ is <em>less</em> likely (posterior odds &lt; 1), we use a random number generator to accept one of the hypotheses by chance. The probability of accepting $\theta_\text{proposal}$ is set to the posterior odds and therefore the probability of accepting $\theta_\text{current}$ is 100% &minus; the posterior odds (in practise we'll be using fractional probabilities, so 1 - the posterior odds).</p>
                         <div class="example-block">
                             <p>E.g. if the posterior odds = 0.8:</p>
                             <p>=&gt; set an 80% chance of selecting $\theta_\text{accepted} = \theta_\text{proposal}$</p>
-                            <p>=&gt; set a 20% chance of selecting $\theta_\text{accepted} = \theta_\text{current}$</p>
+                            <p>=&gt; there's a 20% chance of selecting $\theta_\text{accepted} = \theta_\text{current}$</p>
                             <p><strong>This is the crucial part of the algorithm: even though $\theta_\text{proposal}$ is less likely (80% as likely as $\theta_\text{current}$), there's an 80% chance that we'll accept it anyway</strong></p>
                         </div>
                     </li>
@@ -430,7 +443,7 @@
 
         <p>Each recorded hypothesis $\theta_\text{accepted}$ is a sample from an approximation to the <strong>posterior distribution</strong> and the samples converge to the true posterior distribution $p(\theta \mid \text{data})$ as the number of samples approaches infinity. This process allows us to construct the posterior distribution without ever knowing the $p(\text{data})$ normalisation factor.</p>
 
-        <p>It's the ability to jump to less likely locations in the hypothesis space <em>(when the posterior odds &lt; 1 and we accept $\theta_\text{proposal}$)</em> that constructs the posterior distribution. If we always accepted the most likely hypothesis out of $\theta_\text{proposal}$ and $\theta_\text{current}$ we would create a speed running hill climb to the most likely hypothesis (mode) of the posterior distribution, although this point value is one of the things we want the process wouldn't give us the posterior <em>distribution</em> itself as it wouldn't sample the full probability space &mdash; we would have the mode but no estimation of uncertainty. A hill climb also has greater risk of getting stuck in a local maximum if the distribution has multiple modes, i.e. it wouldn't be able to find multiple modes in a multi modal distribution.</p>
+        <p>It's the ability to jump to less likely locations in the hypothesis space <em>(when the posterior odds &lt; 1 and we accept $\theta_\text{proposal}$)</em> that constructs the posterior distribution. If we always accepted the most likely hypothesis out of $\theta_\text{proposal}$ and $\theta_\text{current}$ we would create a speed running hill climb to the most likely hypothesis (mode) of the posterior distribution, and although this point value is of interest, the process wouldn't give us the posterior <em>distribution</em> itself as it wouldn't sample the full probability space &mdash; we would have the mode but no estimation of its uncertainty. A hill climb also has greater risk of getting stuck in a local maximum if the distribution has multiple modes, i.e. it wouldn't be able to map a multi modal distribution.</p>
 
         <h3>Worked example for oxygen levels</h3>
 
@@ -440,14 +453,15 @@
 
         <h4>Natural logarithms</h4>
 
-        <p>During this example we will be taking the natural logarithm of the equation for the posterior odds.</p>
+        <p>We will be taking the natural logarithm of the equation for the posterior odds.</p>
 
-        <p>Probabilistic computing often involves multiplying fractional probabilities or probability densities many times over, and the result can get very small very fast &mdash; too small for the computer's representation of floating point numbers. For this reason, and because it often makes the mathematical representations simpler, calculations are done in log space.</p>
+        <p>Probabilistic computing often involves multiplying fractional probabilities many times over, and the result can get very small very fast &mdash; too small for the computer's representation of floating point numbers. For this reason, and because it often simplifies the mathematical representations, calculations are done in log space.</p>
 
         <div class="callout">
             <p class="callout-title">Logarithm rules</p>
-            $$\log(a \cdot b) = \log(a) + \log(b)$$
-            $$\log(a / b) = \log(a) - \log(b)$$
+            $$\log(a \cdot b) = \log(a) + \log(b)
+            \\
+            \log(a / b) = \log(a) - \log(b)$$
         </div>
 
         <p>Taking natural logs of both sides, the posterior odds equation becomes:</p>
@@ -470,7 +484,7 @@
 
         $$\frac{p(\theta_\text{proposal})}{p(\theta_\text{current})}$$
 
-        <p>The prior odds is the ratio of the probability densities for our two hypotheses: the prior probability distribution for our model applied to each hypothesis.</p>
+        <p>The prior odds is the ratio of the prior distribution function applied to each hypothesis.</p>
 
         <p>$p(\theta)$ <strong>the prior distribution</strong> &mdash; the probability distribution of hypotheses $\theta$ given our beliefs before seeing the data.</p>
 
@@ -478,7 +492,7 @@
 
         <h5>The time of the change-point $\tau$</h5>
 
-        <p>We have no reason to believe that the change point occurring at time $\tau_1$ is more or less likely than any other time $\tau_2$. Therefore we will model our prior belief as all times are equally likely using a continuous uniform distribution for $\tau$ where $N$ is the total number of hours in the data.</p>
+        <p>We have no reason to believe that the change point occurring at time $\tau_1$ is more or less likely than any other time $\tau_2$. Therefore we will model our prior belief as all times being equally likely by using a continuous uniform distribution for $\tau$ where $N$ is the total number of hours in the data.</p>
 
         $$\tau \sim \operatorname{Uniform}(0, N)$$
 
@@ -492,9 +506,9 @@
 
         <p>Under these conditions the Normal distribution would be a suitable representation of our prior beliefs. We'll choose a standard deviation of +/- 5.0 mg/L, this places our prior belief as being 95% confident that $\mu_1$ and $\mu_2$ are somewhere between 5.2 mg/L and 24.8 mg/L.</p>
 
-        $$\mu_1 \sim \mathrm{Normal}(15.0, 5.0^2)$$
-
-        $$\mu_2 \sim \mathrm{Normal}(15.0, 5.0^2)$$
+        $$\mu_1 \sim \mathrm{Normal}(15.0, 5.0^2)
+        \\
+        \mu_2 \sim \mathrm{Normal}(15.0, 5.0^2)$$
 
         <h5>Putting it together</h5>
 
@@ -506,21 +520,21 @@
 
         <p>$\tau$ is distributed uniformly over the time period of the data.</p>
 
-        $$\tau \sim \operatorname{Uniform}(0, N)$$
-
-        $$p(\tau) = \frac{1}{24}$$
+        $$\tau \sim \operatorname{Uniform}(0, N)
+        \\
+        p(\tau) = \frac{1}{24}$$
 
         <p>The mean oxygen levels are Normally distributed:</p>
 
-        $$\mu_1 \sim \mathrm{Normal}(15.0, 5.0^2)$$
-
-        $$\mu_2 \sim \mathrm{Normal}(15.0, 5.0^2)$$
-
-        $$p(\mu)=\frac{1}{\sigma\sqrt{2\pi}}\cdot\exp\!\left(-\frac{(\mu-M)^2}{2\sigma^2}\right),\quad \sigma=5.0,\; M=15.0$$
-
-        $$p(\mu_1)=\frac{1}{5.0\sqrt{2\pi}}\cdot\exp\!\left(-\frac{(\mu_1-15.0)^2}{2\cdot5.0^2}\right)$$
-
-        $$p(\mu_2)=\frac{1}{5.0\sqrt{2\pi}}\cdot\exp\!\left(-\frac{(\mu_2-15.0)^2}{2\cdot5.0^2}\right)$$
+        $$\mu_1 \sim \mathrm{Normal}(15.0, 5.0^2)
+        \\
+        \mu_2 \sim \mathrm{Normal}(15.0, 5.0^2)
+        \\
+        p(\mu)=\frac{1}{\sigma\sqrt{2\pi}}\cdot\exp\!\left(-\frac{(\mu-M)^2}{2\sigma^2}\right),\quad \sigma=5.0,\; M=15.0
+        \\
+        p(\mu_1)=\frac{1}{5.0\sqrt{2\pi}}\cdot\exp\!\left(-\frac{(\mu_1-15.0)^2}{2\cdot5.0^2}\right)
+        \\
+        p(\mu_2)=\frac{1}{5.0\sqrt{2\pi}}\cdot\exp\!\left(-\frac{(\mu_2-15.0)^2}{2\cdot5.0^2}\right)$$
 
         <p>The prior distribution becomes:</p>
 
@@ -540,20 +554,18 @@
         <p>We want this in log form:</p>
 
         $$\begin{aligned}
-        \ln \! \left(\frac{p(\theta_\text{proposal})}{p(\theta_\text{current})}\right)
+        \ln \! \frac{p(\theta_\text{proposal})}{p(\theta_\text{current})}
         &amp;=
         \ln p(\theta_\text{proposal})
         -
         \ln p(\theta_\text{current})
         \\\\
         &amp;=
-        \begin{aligned}[t]
-        &amp;-\frac{(\mu_1^{\text{proposal}}-15.0)^2}{2\cdot5.0^2}
+        -\frac{(\mu_1^{\text{proposal}}-15.0)^2}{2\cdot5.0^2}
         -\frac{(\mu_2^{\text{proposal}}-15.0)^2}{2\cdot5.0^2}
         \\\\
         &amp;+\frac{(\mu_1^{\text{current}}-15.0)^2}{2\cdot5.0^2}
         +\frac{(\mu_2^{\text{current}}-15.0)^2}{2\cdot5.0^2}
-        \end{aligned}
         \end{aligned}$$
 
         <p>The above equation for the feasibility of one hypothesis versus another makes intuitive sense.</p>
@@ -564,7 +576,9 @@
 
         <div class="callout">
             <p class="callout-title">Note on the properties of natural logarithms</p>
-            $$\ln \! \left(\frac{p(\theta_\text{proposal})}{p(\theta_\text{current})}\right)
+            <p>If the logarithm is negative then the <strong>prior odds</strong> is less than 1: <em>the <strong>proposal hypothesis</strong> is less likely than the <strong>current hypothesis</strong> according to our prior beliefs.</em></p>
+            <p>If the logarithm is 0 or positive then the <strong>prior odds</strong> is greater than or equal to 1: <em>the <strong>proposal hypothesis</strong> is at least as likely than the <strong>current hypothesis</strong> according to our prior beliefs..</em></p>
+            $$\ln \! \frac{p(\theta_\text{proposal})}{p(\theta_\text{current})}
             \begin{cases}
             &lt; 0, &amp; 0 &lt; \frac{p(\theta_\text{proposal})}{p(\theta_\text{current})} &lt; 1,\\
             = 0, &amp; \frac{p(\theta_\text{proposal})}{p(\theta_\text{current})} = 1,\\
@@ -618,7 +632,7 @@
         \prod_{i:\,t_i\ge\tau}\exp\!\left(-\frac{(\text{data}_i-\mu_2)^2}{2\cdot0.9^2}\right)
         \end{aligned}$$
 
-        <p>Now we can express the likelihood ratio:</p>
+        <p>Now we can express the likelihood ratio (the constant factor cancels out):</p>
 
         $$\frac{p(\text{data}\mid \theta_\text{proposal})}
         {p(\text{data}\mid \theta_\text{current})}
@@ -665,11 +679,11 @@
         {2\cdot0.9^2}
         \end{aligned}$$
 
-        <p>This result again makes intuitive sense. Recall that for the prior odds ratio, the further that our proposed mean $\mu_1^{(\text{proposal})}$ was from our prior beliefs, the smaller the odds ratio expressing reduced belief in $\theta_\text{proposal}$. The same thing is happening here, except it's the distance of $\mu_1^{(\text{proposal})}$ from the $\text{data}$.</p>
+        <p>This result again makes intuitive sense. Recall that for the <strong>prior odds ratio</strong>, the further that our proposed mean $\mu_1^{(\text{proposal})}$ was from our prior beliefs, the smaller the odds ratio expressing reduced belief in $\theta_\text{proposal}$. A similar thing is happening here for our <strong>likelihood ratio</strong>, except that this time it's the distance of $\mu_1^{(\text{proposal})}$ from the $\text{data}$.</p>
 
         <h4>3) The posterior odds</h4>
 
-        <p>Now we have everything we need to calculate the <strong>posterior odds</strong> used in step 3) of the Metropolis algorithm.</p>
+        <p>Now we have everything we need to calculate the <strong>posterior odds</strong> used in step 3) of the algorithm.</p>
 
         $$\underbrace{\frac{p(\theta_{\text{proposal}}\mid \text{data})}{p(\theta_\text{current}\mid \text{data})}}_{\text{posterior odds}}=\underbrace{\frac{p(\text{data}\mid \theta_\text{proposal})}{p(\text{data}\mid \theta_\text{current})}}_{\text{likelihood ratio}}\cdot\underbrace{\frac{p(\theta_\text{proposal})}{p(\theta_\text{current})}}_{\text{prior odds}}$$
 
@@ -729,14 +743,14 @@
         <p>Now we know how to compute the posterior odds we can run the algorithm. Recall the process:</p>
 
         <ol>
-            <li>Choose an initial hypothesis for $\theta_\text{current}$ anywhere in the parameter space, e.g.
+            <li>Choose an initial hypothesis for $\theta_\text{current}$ anywhere in the parameter space, e.g.<br><br>
                 <ul>
                     <li>$\mu_1^\text{current}$ = 10.0 mg/L</li>
                     <li>$\mu_2^\text{current}$ = 15.0 mg/L</li>
                     <li>$\tau^\text{current}$ = 11.25 hours</li>
                 </ul>
             </li>
-            <li>Choose a proposal hypothesis $\theta_\text{proposal}$ at random within a region around $\theta_\text{current}$. Any distribution can be used to generate the parameters provided that it's symmetrical (asymmetrical distributions <em>can</em> be used but that requires using a correction term called the Hastings correction, which is beyond the scope of this guide &mdash; maybe I'll add it later). Common choices are the Normal, Uniform and Cauchy distributions. E.g. using a Uniform distribution with proposal widths of +/- 2 mg/L for the means and +/- 2 hours for $\tau$ might suggest:
+            <li>Choose a proposal hypothesis $\theta_\text{proposal}$ at random within a region around $\theta_\text{current}$. Any distribution can be used to generate the parameters provided that it's symmetrical (asymmetrical distributions <em>can</em> be used but that requires using a correction term called the Hastings correction, which is beyond the scope of this guide). Common choices are the Normal, Uniform and Cauchy distributions. Using a Uniform distribution with proposal widths of +/- 2 mg/L for the means and +/- 2 hours for $\tau$ might propose this random hypothesis:<br><br>
                 <ul>
                     <li>$\mu_1^\text{proposal}$ = 11.2 mg/L</li>
                     <li>$\mu_2^\text{proposal}$ = 14.7 mg/L</li>
@@ -746,7 +760,7 @@
             <li>Using the above and the observations in $\text{data}$ calculate the logarithm of the posterior odds using the equation at the end of the previous section.</li>
             <li>
                 <p>Decide whether to accept $\theta_\text{current}$ or $\theta_\text{proposal}$ as the value of $\theta_\text{accepted}$. Recall that we accept $\theta_\text{proposal}$ if the posterior odds $\ge1$. We've calculated the <em>logarithm</em> of the posterior odds, so that means we accept $\theta_\text{proposal}$ if the log value $\ge0$.</p>
-                <p>If the logarithm of the posterior odds is negative, implying $0\le\text{posterior odds}&lt;1$, we need to accept one of the hypotheses at random. We use an RNG to select a number between 0 and 1 and take the logarithm of that number. If the logarithm of the random number is less than the logarithm of the posterior odds we accept $\theta_\text{proposal}$, otherwise we accept $\theta_\text{current}$. This is equivalent to selecting $\theta_\text{proposal}$ if the (non-log) random number is less than the (non-log) posterior odds.</p>
+                <p>If the logarithm of the posterior odds is negative, implying $0\le\text{posterior odds}&lt;1$, we need to accept one of the hypotheses at random. We use an RNG to select a number between 0 and 1 and take the logarithm of that number. If the logarithm of the random number is less than the logarithm of the posterior odds we accept $\theta_\text{proposal}$, otherwise we accept $\theta_\text{current}$.</p>
             </li>
             <li>Record $\theta_\text{accepted}$ as a sample from the posterior distribution</li>
             <li>Jump back to step 2), setting $\theta_\text{current}$ to the value of $\theta_\text{accepted}$</li>
