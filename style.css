@@ -229,7 +229,7 @@ em { font-style: italic; }
     top: 1.5rem;
     left: calc(50% + var(--max-width) / 2 + 1rem);
     right: 1rem;
-    max-width: 260px;
+    max-width: 265px;
     max-height: calc(100vh - 3rem);
     overflow-y: auto;
     z-index: 100;
@@ -314,6 +314,81 @@ em { font-style: italic; }
 .floating-nav__item--h4 a { padding-left: 2.5rem; }
 .floating-nav__item--h5 a { padding-left: 3.25rem; font-size: 0.74rem; }
 .floating-nav__item--h6 a { padding-left: 4rem; font-size: 0.72rem; }
+
+.floating-nav__item--collapsible {
+    overflow: hidden;
+    max-height: 60px;
+    transition: max-height 0.25s ease, opacity 0.25s ease;
+    opacity: 1;
+}
+
+.floating-nav__item--collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.floating-nav__item--has-children > a::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 5px solid currentColor;
+    opacity: 0.4;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.floating-nav__item--expanded > a::after {
+    transform: rotate(90deg);
+    opacity: 0.7;
+}
+
+.floating-nav__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.75rem 0.75rem;
+    border-top: 1px solid rgba(34, 211, 238, 0.1);
+}
+
+.floating-nav__btn {
+    display: block;
+    padding: 0.45rem 0.7rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-align: center;
+    text-decoration: none;
+    color: #adffea;
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    border-radius: 5px;
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(169, 86, 255, 0.06));
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.floating-nav__btn:hover {
+    border-color: rgba(34, 211, 238, 0.5);
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(169, 86, 255, 0.1));
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.1);
+    color: #adffea;
+}
+
+.floating-nav__btn--alt {
+    color: #c68fff;
+    border-color: rgba(169, 86, 255, 0.25);
+    background: linear-gradient(135deg, rgba(169, 86, 255, 0.06), rgba(34, 211, 238, 0.04));
+}
+
+.floating-nav__btn--alt:hover {
+    border-color: rgba(169, 86, 255, 0.5);
+    background: linear-gradient(135deg, rgba(169, 86, 255, 0.12), rgba(34, 211, 238, 0.06));
+    box-shadow: 0 0 10px rgba(169, 86, 255, 0.1);
+    color: #c68fff;
+}
 
 .floating-nav-toggle {
     display: none;

@@ -16,6 +16,11 @@
             <span class="floating-nav__title">Nav</span>
         </div>
         <ul class="floating-nav__list" id="floating-nav-list"></ul>
+        <div class="floating-nav__links">
+            <a href="https://linear-regression.metropolis-algorithm.com/" target="_blank" class="floating-nav__btn">Linear Regression Simulator</a>
+            <a href="https://change-point-detection.metropolis-algorithm.com/" target="_blank" class="floating-nav__btn">Change Point Simulator</a>
+            <a href="https://github.com/almostmachines/metropolis-cpd-script" target="_blank" class="floating-nav__btn floating-nav__btn--alt">Change Point Algorithm</a>
+        </div>
     </nav>
     <button id="floating-nav-toggle" class="floating-nav-toggle" aria-label="Toggle navigation">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -846,12 +851,15 @@
         const toggle = document.getElementById('floating-nav-toggle');
         const headings = document.querySelectorAll('article h1, article h2, article h3, article h4, article h5, article h6');
 
+        // Build nav items with metadata
+        var items = [];
         headings.forEach(function(h, i) {
             if (!h.id) h.id = 'heading-' + i;
-            const level = parseInt(h.tagName[1]);
-            const li = document.createElement('li');
+            var level = parseInt(h.tagName[1]);
+            var li = document.createElement('li');
             li.className = 'floating-nav__item floating-nav__item--h' + level;
-            const a = document.createElement('a');
+            if (level >= 4) li.classList.add('floating-nav__item--collapsible');
+            var a = document.createElement('a');
             a.href = '#' + h.id;
             a.textContent = h.textContent;
             a.addEventListener('click', function() {
@@ -862,14 +870,112 @@
             });
             li.appendChild(a);
             list.appendChild(li);
+            items.push({ li: li, level: level, id: h.id });
         });
+
+        // For each collapsible item (h4/h5), find its parent.
+        // Parent of h4 = nearest preceding h3. Parent of h5 = nearest preceding h4.
+        items.forEach(function(item, idx) {
+            if (item.level < 4) return;
+            var parentLevel = item.level - 1;
+            for (var p = idx - 1; p >= 0; p--) {
+                if (items[p].level === parentLevel) {
+                    item.parentIdx = p;
+                    break;
+                }
+                if (items[p].level < parentLevel) break;
+            }
+        });
+
+        // Second pass: build sibling groups now that all parentIdx values are set
+        items.forEach(function(item, idx) {
+            if (item.level < 4) return;
+            item.siblingGroup = [];
+            for (var s = 0; s < items.length; s++) {
+                if (items[s].level === item.level && items[s].parentIdx === item.parentIdx) {
+                    item.siblingGroup.push(s);
+                }
+            }
+        });
+
+        // Mark parents that have collapsible children with an expand icon
+        var parentsWithChildren = {};
+        items.forEach(function(item) {
+            if (item.parentIdx !== undefined) {
+                parentsWithChildren[item.parentIdx] = true;
+            }
+        });
+        Object.keys(parentsWithChildren).forEach(function(idx) {
+            items[idx].li.classList.add('floating-nav__item--has-children');
+        });
+
+        function updateVisibility(activeId) {
+            // Find index of active item
+            var activeIdx = -1;
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].id === activeId) { activeIdx = i; break; }
+            }
+
+            items.forEach(function(item, idx) {
+                // Update active class
+                var a = item.li.querySelector('a');
+                a.classList.toggle('floating-nav__link--active', idx === activeIdx);
+
+                if (item.level < 4) {
+                    item.li.classList.remove('floating-nav__item--collapsed');
+                    // Toggle expanded state on parents
+                    if (parentsWithChildren[idx]) {
+                        var hasVisibleChild = false;
+                        for (var c = 0; c < items.length; c++) {
+                            if (items[c].parentIdx === idx && !items[c].li.classList.contains('floating-nav__item--collapsed')) {
+                                // Will be set below, so check prospectively
+                            }
+                        }
+                    }
+                    return;
+                }
+
+                // Collapsible item: show if active item is self, parent, sibling,
+                // or a child of self/sibling (so h4 siblings stay visible when an h5 is active)
+                var show = false;
+                if (activeIdx >= 0) {
+                    if (activeIdx === idx) show = true;
+                    else if (item.parentIdx !== undefined && activeIdx === item.parentIdx) show = true;
+                    else if (item.siblingGroup && item.siblingGroup.indexOf(activeIdx) !== -1) show = true;
+                    // Check if active item's parent (or any ancestor) is self or a sibling
+                    else {
+                        var ancestor = items[activeIdx];
+                        while (ancestor && ancestor.parentIdx !== undefined) {
+                            ancestor = items[ancestor.parentIdx];
+                            if (ancestor === item) { show = true; break; }
+                            if (item.siblingGroup && item.siblingGroup.indexOf(items.indexOf(ancestor)) !== -1) { show = true; break; }
+                        }
+                    }
+                }
+                item.li.classList.toggle('floating-nav__item--collapsed', !show);
+            });
+
+            // Update expanded icon state on parents
+            Object.keys(parentsWithChildren).forEach(function(pIdx) {
+                var expanded = false;
+                for (var c = 0; c < items.length; c++) {
+                    if (items[c].parentIdx === parseInt(pIdx) && !items[c].li.classList.contains('floating-nav__item--collapsed')) {
+                        expanded = true;
+                        break;
+                    }
+                }
+                items[pIdx].li.classList.toggle('floating-nav__item--expanded', expanded);
+            });
+        }
+
+        // Initial state: collapse all h4/h5
+        updateVisibility(null);
 
         toggle.addEventListener('click', function() {
             nav.classList.toggle('floating-nav--open');
             toggle.classList.toggle('floating-nav-toggle--active');
         });
 
-        // Close nav when clicking outside on small screens
         document.addEventListener('click', function(e) {
             if (window.innerWidth < 1600 && nav.classList.contains('floating-nav--open')) {
                 if (!nav.contains(e.target) && e.target !== toggle && !toggle.contains(e.target)) {
@@ -879,14 +985,11 @@
             }
         });
 
-        // Highlight current section
-        const observer = new IntersectionObserver(function(entries) {
+        // Highlight current section and update collapsible visibility
+        var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
-                    const id = entry.target.id;
-                    list.querySelectorAll('a').forEach(function(a) {
-                        a.classList.toggle('floating-nav__link--active', a.getAttribute('href') === '#' + id);
-                    });
+                    updateVisibility(entry.target.id);
                 }
             });
         }, { rootMargin: '0px 0px -70% 0px', threshold: 0 });
