@@ -445,6 +445,14 @@
 
         <p>It's the ability to jump to less likely locations in the hypothesis space <em>(when the posterior odds &lt; 1 and we accept $\theta_\text{proposal}$)</em> that constructs the posterior distribution. If we always accepted the most likely hypothesis out of $\theta_\text{proposal}$ and $\theta_\text{current}$ we would create a speed running hill climb to the most likely hypothesis (mode) of the posterior distribution, and although this point value is of interest, the process wouldn't give us the posterior <em>distribution</em> itself as it wouldn't sample the full probability space &mdash; we would have the mode but no estimation of its uncertainty. A hill climb also has greater risk of getting stuck in a local maximum if the distribution has multiple modes, i.e. it wouldn't be able to map a multi modal distribution.</p>
 
+        <h3>Markov chain Monte Carlo</h3>
+
+        <p>You'll often see the Metropolis algorithm referred to as Markov chain Monte Carlo or MCMC for short.</p>
+
+        <p>A Markov chain is any sequence where the next state depends only on the current state, not on how you got there. At each step, we propose a move based on where we are now, evaluate whether to accept based on current versus proposed, and move (or stay). The entire history of where we've been is irrelevant to what happens next.</p>
+
+        <p>The "Monte Carlo" part refers to the randomness — we're using random sampling to explore the space by accepting/rejecting proposals.</p>
+
         <h3>Worked example for oxygen levels</h3>
 
         <p>We need to derive the posterior odds equation used in the proposal step:</p>
