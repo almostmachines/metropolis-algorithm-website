@@ -802,7 +802,7 @@
 
         <h4>Proposal widths</h4>
 
-        <p>We didn't discuss how to select these values. In both of the simulations you can change the proposal width for each parameter in the settings. Try changing these and observe how it affects the exploration of the probability space and the acceptance rate displayed in the results. A common rule of thumb is to tune proposal widths to get an acceptance rate around 20-50% (the optimal depends on the dimensionality and other factors, but this range is a reasonable target).</p>
+        <p>In both of the simulations you can change the proposal width for each parameter in the settings. Try changing these and observe how it affects the exploration of the probability space and the acceptance rate displayed in the results. A common rule of thumb is to tune proposal widths to get an acceptance rate around 20-50% (the optimal depends on the dimensionality and other factors, but this range is a reasonable target).</p>
 
         <p>If the proposal width is too narrow, you take tiny steps. Each proposal is very close to where you are, so it's almost always accepted (the posterior doesn't change much over small distances). Your acceptance rate is high, but you explore the space slowly — it takes many iterations to move from one region to another. The chain is highly correlated: consecutive samples are nearly identical.</p>
 
