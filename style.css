@@ -169,7 +169,7 @@ em { font-style: italic; }
     margin: 2.3rem 0;
     overflow-x: auto;
     overflow-y: hidden;
-    background: #4a696e;
+    background: #4a696e57;
     padding: 1rem 1.25rem;
     border-radius: 8px;
 }
